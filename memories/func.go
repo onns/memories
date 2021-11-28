@@ -37,6 +37,36 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 					Date: lunar.AddDate(i, 0, 0).ToSolar(),
 				})
 			}
+		case SpecialDay:
+			for i := 1; i <= 100; i++ {
+				days = append(days, &Anniversary{
+					Type: a.Type,
+					Name: fmt.Sprintf("%s的第%d年", a.Name, i),
+					Date: a.Date.AddDate(i, 0, 0),
+				})
+			}
+			days = append(days, &Anniversary{
+				Type: a.Type,
+				Name: fmt.Sprintf("%s的第%d天", a.Name, 1),
+				Date: a.Date,
+			})
+			for i := 1; i*100 <= 365*100; i++ {
+				days = append(days, &Anniversary{
+					Type: a.Type,
+					Name: fmt.Sprintf("%s的第%d天", a.Name, i*100),
+					Date: a.Date.AddDate(0, 0, i*100-1),
+				})
+			}
+			// days = append(days, &Anniversary{
+			// 	Type: a.Type,
+			// 	Name: fmt.Sprintf("%s的第%d天", a.Name, 520),
+			// 	Date: a.Date.AddDate(520, 0, 0),
+			// })
+			// days = append(days, &Anniversary{
+			// 	Type: a.Type,
+			// 	Name: fmt.Sprintf("%s的第%d天", a.Name, 1314),
+			// 	Date: a.Date.AddDate(1314, 0, 0),
+			// })
 		}
 	}
 	return
