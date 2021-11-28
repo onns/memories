@@ -7,6 +7,7 @@ import (
 	"time"
 
 	ics "github.com/arran4/golang-ical"
+	"github.com/onns/lunar"
 )
 
 /*
@@ -27,6 +28,15 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 					Date: a.Date.AddDate(i, 0, 0),
 				})
 			}
+		case LunarBirthday:
+			lunar := lunar.Parse(a.Date)
+			for i := 0; i <= 100; i++ {
+				days = append(days, &Anniversary{
+					Type: a.Type,
+					Name: fmt.Sprintf("%s的第%d个农历生日", a.Name, i),
+					Date: lunar.AddDate(i, 0, 0).ToSolar(),
+				})
+			}
 		}
 	}
 	return
@@ -38,7 +48,7 @@ func GenerateIcs(days []*Anniversary) (res string) {
 	cal.SetXWRCalName("Special Day")
 	cal.SetXWRTimezone("Asia/Shanghai")
 	for _, day := range days {
-		event := cal.AddEvent(fmt.Sprintf("%s_%s@onns.xyz", generateUid(day.Name), day.Date.Format("20060102")))
+		event := cal.AddEvent(fmt.Sprintf("%s@onns.xyz", generateUid(day)))
 		event.SetCreatedTime(time.Now())
 		event.SetCreatedTime(time.Now())
 		event.SetDtStampTime(time.Now())
@@ -57,8 +67,8 @@ func GenerateIcs(days []*Anniversary) (res string) {
 	return
 }
 
-func generateUid(name string) string {
+func generateUid(a *Anniversary) string {
 	h := md5.New()
-	h.Write([]byte(name))
-	return hex.EncodeToString(h.Sum(nil))
+	h.Write([]byte(a.Name))
+	return fmt.Sprintf("%s%d%s", hex.EncodeToString(h.Sum(nil)), a.Type, a.Date.Format("20060102"))
 }
