@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -19,14 +21,29 @@ import (
 
 var as = make([]*memories.Anniversary, 0)
 var exPath = ""
+var output = ""
 
 func loadConfig() {
-	ex, err := os.Executable()
-	if err != nil {
-		panic(err)
+	var (
+		ex  string
+		err error
+	)
+	c := flag.String("c", "config.json", "config file name")
+	a := flag.Bool("a", true, "absolute file path")
+	o := flag.String("o", "special-day", "output file name with (.ics)")
+	flag.Parse()
+	filename := ""
+	if !*a {
+		ex, err = os.Executable()
+		if err != nil {
+			panic(err)
+		}
+		exPath = filepath.Dir(ex)
+		filename = path.Join(exPath, *c)
+	} else {
+		filename = *c
 	}
-	exPath = filepath.Dir(ex)
-	filename := path.Join(exPath, "config.json")
+
 	if _, err = os.Stat(filename); err != nil {
 		panic(err)
 	}
@@ -35,6 +52,7 @@ func loadConfig() {
 		panic(err)
 	}
 	json.Unmarshal(b, &as)
+	output = *o
 }
 
 func init() {
@@ -47,5 +65,5 @@ func init() {
 
 func main() {
 	res := memories.GenerateIcs(memories.GenerateDays(as))
-	ioutil.WriteFile(path.Join(exPath, "special-day.ics"), []byte(res), 0644)
+	ioutil.WriteFile(path.Join(exPath, fmt.Sprintf("%s.ics", output)), []byte(res), 0644)
 }
