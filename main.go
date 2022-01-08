@@ -86,11 +86,11 @@ func loadConfig() {
 
 func init() {
 	loadConfig()
-	// location, _ := time.LoadLocation("UTC")
+	allDayLocation, _ := time.LoadLocation("UTC")
 	location := time.Local
 	for _, a := range as {
 		a.AllDay = true
-		a.Date, _ = time.ParseInLocation("2006-01-02", a.DateRaw, location)
+		a.Date, _ = time.ParseInLocation("2006-01-02", a.DateRaw, allDayLocation)
 		if a.StartRaw != "" {
 			a.Start, _ = time.ParseInLocation("2006-01-02 15:04", fmt.Sprintf("%s %s", a.DateRaw, a.StartRaw), location)
 			a.AllDay = false
