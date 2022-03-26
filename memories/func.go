@@ -62,11 +62,12 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 				End:    a.End,
 				AllDay: a.AllDay,
 			})
-			for i := 1; i*100 <= 365*100; i++ {
+			sep := 5
+			for i := 1; i*sep <= 365*100; i++ {
 				days = append(days, &Anniversary{
 					Type:   a.Type,
-					Name:   fmt.Sprintf("%s的第%d天", a.Name, i*100),
-					Date:   a.Date.AddDate(0, 0, i*100-1),
+					Name:   fmt.Sprintf("%s的第%d天", a.Name, i*sep),
+					Date:   a.Date.AddDate(0, 0, i*sep-1),
 					Start:  a.Start,
 					End:    a.End,
 					AllDay: a.AllDay,
@@ -81,6 +82,26 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 				Date:   a.Date,
 				AllDay: a.AllDay,
 			})
+		case Countdown:
+			days = append(days, &Anniversary{
+				Type:   a.Type,
+				Name:   fmt.Sprintf("%s", a.Name),
+				Date:   a.Date,
+				Start:  a.Start,
+				End:    a.End,
+				AllDay: a.AllDay,
+			})
+			sep := 5
+			for i := 1; i*sep <= 100; i++ {
+				days = append(days, &Anniversary{
+					Type:   a.Type,
+					Name:   fmt.Sprintf("距离%s还有%d天", a.Name, i*sep),
+					Date:   a.Date.AddDate(0, 0, -i*sep),
+					Start:  a.Start,
+					End:    a.End,
+					AllDay: a.AllDay,
+				})
+			}
 		}
 	}
 	return

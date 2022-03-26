@@ -27,4 +27,5 @@ const (
 	LunarBirthday AnniversaryType = 2
 	SpecialDay    AnniversaryType = 3
 	OneDay        AnniversaryType = 4
+	Countdown     AnniversaryType = 5
 )
