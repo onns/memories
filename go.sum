@@ -12,6 +12,10 @@ github.com/nosixtools/solarlunar v0.0.0-20211112060703-1b6dea7b4a19 h1:LhWT2dBuN
 github.com/nosixtools/solarlunar v0.0.0-20211112060703-1b6dea7b4a19/go.mod h1:LjhyrWzOLJ9l1azMoNr9iCvfNrHEREqvJHzSLQcD0/o=
 github.com/onns/lunar v0.0.0-20211128085053-9e6e2e9bb9b6 h1:3x+XFUmIfL29T1SW/Ot8TkogeqW0DhkPbl6LXrYAnHs=
 github.com/onns/lunar v0.0.0-20211128085053-9e6e2e9bb9b6/go.mod h1:oApkCIXuZmLr0WUvrlpKaMb6ykt/nKNglB7YFa+vrI4=
+github.com/onns/lunar v0.0.0-20211128091135-3690a87d5f50 h1:r1lR5JuLERhTJsiVmSUfgQLDnkhGNuTpZJRtTBhcEvE=
+github.com/onns/lunar v0.0.0-20211128091135-3690a87d5f50/go.mod h1:oApkCIXuZmLr0WUvrlpKaMb6ykt/nKNglB7YFa+vrI4=
+github.com/onns/lunar v0.0.0-20220331120617-af648bba010c h1:98FSxPXpXxRwhnq1qmLEaViquH+eRTlJ31wQ3G1Rliw=
+github.com/onns/lunar v0.0.0-20220331120617-af648bba010c/go.mod h1:oApkCIXuZmLr0WUvrlpKaMb6ykt/nKNglB7YFa+vrI4=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=

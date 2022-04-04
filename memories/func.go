@@ -34,10 +34,15 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 		case LunarBirthday:
 			lunar := lunar.Parse(a.Date)
 			for i := 0; i <= 100; i++ {
+				lunarNew, err := lunar.AddDate(i, 0, 0)
+				if err != nil {
+					// 目前阴历只能算到2050年
+					break
+				}
 				days = append(days, &Anniversary{
 					Type:   a.Type,
 					Name:   fmt.Sprintf("%s的第%d个农历生日", a.Name, i),
-					Date:   lunar.AddDate(i, 0, 0).ToSolar(),
+					Date:   lunarNew.ToSolar(),
 					Start:  a.Start,
 					End:    a.End,
 					AllDay: a.AllDay,
