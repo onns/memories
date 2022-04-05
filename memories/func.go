@@ -67,7 +67,7 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 				End:    a.End,
 				AllDay: a.AllDay,
 			})
-			sep := 5
+			sep := formatSep(a.Sep, 50)
 			for i := 1; i*sep <= 365*100; i++ {
 				days = append(days, &Anniversary{
 					Type:   a.Type,
@@ -96,7 +96,7 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 				End:    a.End,
 				AllDay: a.AllDay,
 			})
-			sep := 5
+			sep := formatSep(a.Sep, 50)
 			for i := 1; i*sep <= 100; i++ {
 				days = append(days, &Anniversary{
 					Type:   a.Type,
@@ -151,4 +151,13 @@ func generateUid(a *Anniversary) string {
 	h := md5.New()
 	h.Write([]byte(a.Name))
 	return fmt.Sprintf("%s%d%s", hex.EncodeToString(h.Sum(nil)), a.Type, a.Date.Format("20060102"))
+}
+
+func formatSep(sep, defaultSep int) (res int) {
+	if sep <= 0 {
+		res = defaultSep
+		return
+	}
+	res = sep
+	return
 }

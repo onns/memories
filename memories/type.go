@@ -18,6 +18,7 @@ type Anniversary struct {
 	End      time.Time       `json:"end_format"`
 	EndRaw   string          `json:"end"`
 	AllDay   bool            `json:"all_day"`
+	Sep      int             `json:"sep"`
 }
 
 type AnniversaryType int8
