@@ -9,24 +9,30 @@ import "time"
 */
 
 type Anniversary struct {
-	Type     AnniversaryType `json:"type"`
-	Name     string          `json:"name"`
-	Date     time.Time       `json:"date_format"`
-	DateRaw  string          `json:"date"`
-	Start    time.Time       `json:"start_format"`
-	StartRaw string          `json:"start"`
-	End      time.Time       `json:"end_format"`
-	EndRaw   string          `json:"end"`
-	AllDay   bool            `json:"all_day"`
-	Sep      int             `json:"sep"`
+	Type      AnniversaryType `json:"type"`
+	Name      string          `json:"name"`
+	Date      time.Time       `json:"date_format"`
+	DateRaw   string          `json:"date"`
+	Start     time.Time       `json:"start_format"`
+	StartRaw  string          `json:"start"`
+	End       time.Time       `json:"end_format"`
+	EndRaw    string          `json:"end"`
+	AllDay    bool            `json:"all_day"`
+	Sep       int             `json:"sep"`
+	Countdown int             `json:"countdown"`
 }
 
 type AnniversaryType int8
 
 const (
-	Birthday      AnniversaryType = 1
-	LunarBirthday AnniversaryType = 2
-	SpecialDay    AnniversaryType = 3
-	OneDay        AnniversaryType = 4
-	Countdown     AnniversaryType = 5
+	Birthday         AnniversaryType = 1
+	LunarBirthday    AnniversaryType = 2
+	SpecialDay       AnniversaryType = 3
+	OneDay           AnniversaryType = 4
+	Countdown        AnniversaryType = 5
+	RepeatedDay      AnniversaryType = 6
+	DefaultMax       int             = 365 * 100
+	DefaultCountDown int             = 100
+	DefaultSep       int             = 50
+	DefaultRepeat    int             = 5
 )

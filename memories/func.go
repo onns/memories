@@ -49,7 +49,8 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 				})
 			}
 		case SpecialDay:
-			for i := 1; i <= 100; i++ {
+			countdown := formatCountdown(a.Countdown, DefaultMax)
+			for i := 1; i <= countdown/365; i++ {
 				days = append(days, &Anniversary{
 					Type:   a.Type,
 					Name:   fmt.Sprintf("%s的第%d年", a.Name, i),
@@ -67,8 +68,8 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 				End:    a.End,
 				AllDay: a.AllDay,
 			})
-			sep := formatSep(a.Sep, 50)
-			for i := 1; i*sep <= 365*100; i++ {
+			sep := formatSep(a.Sep, DefaultSep)
+			for i := 1; i*sep <= countdown; i++ {
 				days = append(days, &Anniversary{
 					Type:   a.Type,
 					Name:   fmt.Sprintf("%s的第%d天", a.Name, i*sep),
@@ -96,12 +97,26 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 				End:    a.End,
 				AllDay: a.AllDay,
 			})
-			sep := formatSep(a.Sep, 50)
-			for i := 1; i*sep <= 100; i++ {
+			sep := formatSep(a.Sep, DefaultSep)
+			countdown := formatCountdown(a.Countdown, DefaultCountDown)
+			for i := 1; i*sep <= countdown; i++ {
 				days = append(days, &Anniversary{
 					Type:   a.Type,
 					Name:   fmt.Sprintf("距离%s还有%d天", a.Name, i*sep),
 					Date:   a.Date.AddDate(0, 0, -i*sep),
+					Start:  a.Start,
+					End:    a.End,
+					AllDay: a.AllDay,
+				})
+			}
+		case RepeatedDay:
+			sep := formatSep(a.Sep, DefaultRepeat)
+			countdown := formatCountdown(a.Countdown, DefaultCountDown)
+			for i := 0; i*sep <= countdown; i++ {
+				days = append(days, &Anniversary{
+					Type:   a.Type,
+					Name:   a.Name,
+					Date:   a.Date.AddDate(0, 0, i*sep),
 					Start:  a.Start,
 					End:    a.End,
 					AllDay: a.AllDay,
@@ -135,7 +150,15 @@ func GenerateIcs(name string, days []*Anniversary) (res string) {
 		event.SetDescription("")
 		event.SetSequence(0)
 		event.SetStatus(ics.ObjectStatusConfirmed)
-		// alarm := event.AddAlarm()
+		alarm := event.AddAlarm()
+		alarm.SetTrigger("P0DT9H0M0S")
+		alarm.SetAction(ics.ActionDisplay)
+		// BEGIN:VALARM
+		// ACTION:DISPLAY
+		// DESCRIPTION:This is an event reminder
+		// TRIGGER:P0DT9H0M0S
+		// END:VALARM
+
 		// alarm.Properties
 	}
 	res = cal.Serialize()
@@ -159,5 +182,14 @@ func formatSep(sep, defaultSep int) (res int) {
 		return
 	}
 	res = sep
+	return
+}
+
+func formatCountdown(countdown, defaultCountdown int) (res int) {
+	if countdown <= 0 {
+		res = defaultCountdown
+		return
+	}
+	res = countdown
 	return
 }
