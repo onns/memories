@@ -18,6 +18,9 @@ import (
 
 func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 	days = make([]*Anniversary, 0)
+	latestDay := &Anniversary{
+		Date: time.Time{},
+	}
 	for _, a := range as {
 		switch a.Type {
 		case Birthday:
@@ -79,6 +82,16 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 					AllDay: a.AllDay,
 				})
 			}
+			if countdown%sep != 0 {
+				days = append(days, &Anniversary{
+					Type:   a.Type,
+					Name:   fmt.Sprintf("%s的第%d天", a.Name, countdown),
+					Date:   a.Date.AddDate(0, 0, countdown-1),
+					Start:  a.Start,
+					End:    a.End,
+					AllDay: a.AllDay,
+				})
+			}
 		case OneDay:
 			days = append(days, &Anniversary{
 				Type:   a.Type,
@@ -99,11 +112,31 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 			})
 			sep := formatSep(a.Sep, DefaultSep)
 			countdown := formatCountdown(a.Countdown, DefaultCountDown)
+			for i := 1; i < sep; i++ {
+				days = append(days, &Anniversary{
+					Type:   a.Type,
+					Name:   fmt.Sprintf("距离%s还有%d天", a.Name, i),
+					Date:   a.Date.AddDate(0, 0, -i),
+					Start:  a.Start,
+					End:    a.End,
+					AllDay: a.AllDay,
+				})
+			}
 			for i := 1; i*sep <= countdown; i++ {
 				days = append(days, &Anniversary{
 					Type:   a.Type,
 					Name:   fmt.Sprintf("距离%s还有%d天", a.Name, i*sep),
 					Date:   a.Date.AddDate(0, 0, -i*sep),
+					Start:  a.Start,
+					End:    a.End,
+					AllDay: a.AllDay,
+				})
+			}
+			if countdown%sep != 0 {
+				days = append(days, &Anniversary{
+					Type:   a.Type,
+					Name:   fmt.Sprintf("距离%s还有%d天", a.Name, countdown),
+					Date:   a.Date.AddDate(0, 0, -countdown),
 					Start:  a.Start,
 					End:    a.End,
 					AllDay: a.AllDay,
@@ -122,7 +155,30 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 					AllDay: a.AllDay,
 				})
 			}
+		case NucleicAcidTestDay:
+			if a.Date.After(latestDay.Date) {
+				latestDay = a
+			}
+			days = append(days, &Anniversary{
+				Type:   a.Type,
+				Name:   fmt.Sprintf("%s", a.Name),
+				Date:   a.Date,
+				Start:  a.Start,
+				End:    a.End,
+				AllDay: a.AllDay,
+			})
+
 		}
+	}
+	if !latestDay.Date.IsZero() {
+		days = append(days, &Anniversary{
+			Type:   latestDay.Type,
+			Name:   "核酸检测失效",
+			Date:   latestDay.Date.AddDate(0, 0, 3),
+			Start:  latestDay.Start,
+			End:    latestDay.End,
+			AllDay: latestDay.AllDay,
+		})
 	}
 	return
 }
@@ -151,7 +207,11 @@ func GenerateIcs(name string, days []*Anniversary) (res string) {
 		event.SetSequence(0)
 		event.SetStatus(ics.ObjectStatusConfirmed)
 		alarm := event.AddAlarm()
-		alarm.SetTrigger("P0DT9H0M0S")
+		if day.AllDay {
+			alarm.SetTrigger("P0DT9H0M0S")
+		} else {
+			alarm.SetTrigger("-P0DT2H0M0S")
+		}
 		alarm.SetAction(ics.ActionDisplay)
 		// BEGIN:VALARM
 		// ACTION:DISPLAY
@@ -166,7 +226,7 @@ func GenerateIcs(name string, days []*Anniversary) (res string) {
 }
 
 func mergeDate(a, b time.Time) (res time.Time) {
-	res = time.Date(a.Year(), a.Month(), a.Day(), b.Hour(), b.Minute(), b.Second(), b.Nanosecond(), a.Location())
+	res = time.Date(a.Year(), a.Month(), a.Day(), b.Hour(), b.Minute(), b.Second(), b.Nanosecond(), b.Location())
 	return
 }
 

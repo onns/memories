@@ -92,11 +92,11 @@ func init() {
 		a.AllDay = true
 		a.Date, _ = time.ParseInLocation("2006-01-02", a.DateRaw, allDayLocation)
 		if a.StartRaw != "" {
-			a.Start, _ = time.ParseInLocation("2006-01-02 15:04", fmt.Sprintf("%s %s", a.DateRaw, a.StartRaw), location)
+			a.Start, _ = time.ParseInLocation("2006-01-02 15:04:05", fmt.Sprintf("%s %s", a.DateRaw, a.StartRaw), location)
 			a.AllDay = false
 		}
 		if a.EndRaw != "" {
-			a.End, _ = time.ParseInLocation("2006-01-02 15:04", fmt.Sprintf("%s %s", a.DateRaw, a.EndRaw), location)
+			a.End, _ = time.ParseInLocation("2006-01-02 15:04:05", fmt.Sprintf("%s %s", a.DateRaw, a.EndRaw), location)
 			a.AllDay = false
 		}
 	}
