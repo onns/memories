@@ -10,6 +10,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"mem/memories"
@@ -58,6 +59,9 @@ func loadConfig() {
 			log.Fatal(err)
 		}
 		for _, f := range files {
+			if strings.Index(f.Name(), ".json") == -1 {
+				continue
+			}
 			tas := make([]*memories.Anniversary, 0)
 			tempFilename := path.Join(filename, f.Name())
 			bs, err = ioutil.ReadFile(tempFilename)
