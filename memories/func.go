@@ -233,7 +233,7 @@ func mergeDate(a, b time.Time) (res time.Time) {
 func generateUid(a *Anniversary) string {
 	h := md5.New()
 	h.Write([]byte(a.Name))
-	return fmt.Sprintf("%s%d%s", hex.EncodeToString(h.Sum(nil)), a.Type, a.Date.Format("20060102"))
+	return fmt.Sprintf("%s%d%s%s", hex.EncodeToString(h.Sum(nil)), a.Type, a.Date.Format("20060102"), a.Start.Format("150405"))
 }
 
 func formatSep(sep, defaultSep int) (res int) {
