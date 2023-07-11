@@ -18,9 +18,6 @@ import (
 
 func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 	days = make([]*Anniversary, 0)
-	latestDay := &Anniversary{
-		Date: time.Time{},
-	}
 	for _, a := range as {
 		switch a.Type {
 		case Birthday:
@@ -32,6 +29,7 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 					Start:  a.Start,
 					End:    a.End,
 					AllDay: a.AllDay,
+					Desc:   a.Desc,
 				})
 			}
 		case LunarBirthday:
@@ -49,6 +47,7 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 					Start:  a.Start,
 					End:    a.End,
 					AllDay: a.AllDay,
+					Desc:   a.Desc,
 				})
 			}
 		case SpecialDay:
@@ -61,6 +60,7 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 					Start:  a.Start,
 					End:    a.End,
 					AllDay: a.AllDay,
+					Desc:   a.Desc,
 				})
 			}
 			days = append(days, &Anniversary{
@@ -70,6 +70,7 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 				Start:  a.Start,
 				End:    a.End,
 				AllDay: a.AllDay,
+				Desc:   a.Desc,
 			})
 			sep := formatSep(a.Sep, DefaultSep)
 			for i := 1; i*sep <= countdown; i++ {
@@ -80,6 +81,7 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 					Start:  a.Start,
 					End:    a.End,
 					AllDay: a.AllDay,
+					Desc:   a.Desc,
 				})
 			}
 			if countdown%sep != 0 {
@@ -90,6 +92,7 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 					Start:  a.Start,
 					End:    a.End,
 					AllDay: a.AllDay,
+					Desc:   a.Desc,
 				})
 			}
 		case OneDay:
@@ -100,6 +103,7 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 				End:    a.End,
 				Date:   a.Date,
 				AllDay: a.AllDay,
+				Desc:   a.Desc,
 			})
 		case Countdown:
 			days = append(days, &Anniversary{
@@ -109,6 +113,7 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 				Start:  a.Start,
 				End:    a.End,
 				AllDay: a.AllDay,
+				Desc:   a.Desc,
 			})
 			sep := formatSep(a.Sep, DefaultSep)
 			countdown := formatCountdown(a.Countdown, DefaultCountDown)
@@ -120,6 +125,7 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 					Start:  a.Start,
 					End:    a.End,
 					AllDay: a.AllDay,
+					Desc:   a.Desc,
 				})
 			}
 			for i := 1; i*sep <= countdown; i++ {
@@ -130,6 +136,7 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 					Start:  a.Start,
 					End:    a.End,
 					AllDay: a.AllDay,
+					Desc:   a.Desc,
 				})
 			}
 			if countdown%sep != 0 {
@@ -140,6 +147,7 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 					Start:  a.Start,
 					End:    a.End,
 					AllDay: a.AllDay,
+					Desc:   a.Desc,
 				})
 			}
 		case RepeatedDay:
@@ -153,32 +161,10 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 					Start:  a.Start,
 					End:    a.End,
 					AllDay: a.AllDay,
+					Desc:   a.Desc,
 				})
 			}
-		case NucleicAcidTestDay:
-			if a.Date.After(latestDay.Date) {
-				latestDay = a
-			}
-			days = append(days, &Anniversary{
-				Type:   a.Type,
-				Name:   fmt.Sprintf("%s", a.Name),
-				Date:   a.Date,
-				Start:  a.Start,
-				End:    a.End,
-				AllDay: a.AllDay,
-			})
-
 		}
-	}
-	if !latestDay.Date.IsZero() {
-		days = append(days, &Anniversary{
-			Type:   latestDay.Type,
-			Name:   "核酸检测失效",
-			Date:   latestDay.Date.AddDate(0, 0, 3),
-			Start:  latestDay.Start,
-			End:    latestDay.End,
-			AllDay: latestDay.AllDay,
-		})
 	}
 	return
 }
@@ -188,7 +174,11 @@ func GenerateIcs(name string, days []*Anniversary) (res string) {
 	cal.SetMethod(ics.MethodPublish)
 	cal.SetXWRCalName(name)
 	cal.SetXWRTimezone("Asia/Shanghai")
+	now := time.Now()
 	for _, day := range days {
+		if !dateInRange(day.Date, now) {
+			continue
+		}
 		event := cal.AddEvent(fmt.Sprintf("%s@onns.xyz", generateUid(day)))
 		event.SetCreatedTime(time.Now())
 		event.SetCreatedTime(time.Now())
@@ -203,7 +193,7 @@ func GenerateIcs(name string, days []*Anniversary) (res string) {
 		}
 		event.SetSummary(day.Name)
 		event.SetLocation("")
-		event.SetDescription("")
+		event.SetDescription(day.Desc)
 		event.SetSequence(0)
 		event.SetStatus(ics.ObjectStatusConfirmed)
 		alarm := event.AddAlarm()
@@ -251,5 +241,10 @@ func formatCountdown(countdown, defaultCountdown int) (res int) {
 		return
 	}
 	res = countdown
+	return
+}
+
+func dateInRange(d time.Time, t time.Time) (res bool) {
+	res = t.AddDate(1, 0, 0).After(d) && t.AddDate(-1, 0, 0).Before(d)
 	return
 }

@@ -20,20 +20,20 @@ type Anniversary struct {
 	AllDay    bool            `json:"all_day"`
 	Sep       int             `json:"sep"`
 	Countdown int             `json:"countdown"`
+	Desc      string          `json:"desc"`
 }
 
 type AnniversaryType int8
 
 const (
-	Birthday           AnniversaryType = 1
-	LunarBirthday      AnniversaryType = 2
-	SpecialDay         AnniversaryType = 3
-	OneDay             AnniversaryType = 4
-	Countdown          AnniversaryType = 5
-	RepeatedDay        AnniversaryType = 6
-	NucleicAcidTestDay AnniversaryType = 7
-	DefaultMax         int             = 365 * 100
-	DefaultCountDown   int             = 100
-	DefaultSep         int             = 50
-	DefaultRepeat      int             = 5
+	Birthday         AnniversaryType = 1
+	LunarBirthday    AnniversaryType = 2
+	SpecialDay       AnniversaryType = 3
+	OneDay           AnniversaryType = 4
+	Countdown        AnniversaryType = 5
+	RepeatedDay      AnniversaryType = 6
+	DefaultMax       int             = 365 * 100
+	DefaultCountDown int             = 100
+	DefaultSep       int             = 50
+	DefaultRepeat    int             = 5
 )
