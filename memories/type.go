@@ -32,6 +32,7 @@ const (
 	OneDay           AnniversaryType = 4
 	Countdown        AnniversaryType = 5
 	RepeatedDay      AnniversaryType = 6
+	PetBirthday      AnniversaryType = 7
 	DefaultMax       int             = 365 * 100
 	DefaultCountDown int             = 100
 	DefaultSep       int             = 50

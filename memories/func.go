@@ -32,6 +32,18 @@ func GenerateDays(as []*Anniversary) (days []*Anniversary) {
 					Desc:   a.Desc,
 				})
 			}
+		case PetBirthday:
+			for i := 0; i <= 100*12; i++ {
+				days = append(days, &Anniversary{
+					Type:   a.Type,
+					Name:   fmt.Sprintf("%s出生的第%d个月", a.Name, i),
+					Date:   a.Date.AddDate(0, i, 0),
+					Start:  a.Start,
+					End:    a.End,
+					AllDay: a.AllDay,
+					Desc:   a.Desc,
+				})
+			}
 		case LunarBirthday:
 			lunar := lunar.Parse(a.Date)
 			for i := 0; i <= 100; i++ {
