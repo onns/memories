@@ -208,13 +208,20 @@ func GenerateIcs(name string, days []*Anniversary) (res string) {
 		event.SetDescription(day.Desc)
 		event.SetSequence(0)
 		event.SetStatus(ics.ObjectStatusConfirmed)
-		alarm := event.AddAlarm()
+
 		if day.AllDay {
-			alarm.SetTrigger("P0DT9H0M0S")
+			alarm := event.AddAlarm()
+			alarm.SetTrigger("-P6DT15H")
+			alarm.SetAction(ics.ActionDisplay)
+			alarm2 := event.AddAlarm()
+			alarm2.SetTrigger("P0DT9H0M0S")
+			alarm2.SetAction(ics.ActionDisplay)
 		} else {
+			alarm := event.AddAlarm()
 			alarm.SetTrigger("-P0DT2H0M0S")
+			alarm.SetAction(ics.ActionDisplay)
 		}
-		alarm.SetAction(ics.ActionDisplay)
+
 		// BEGIN:VALARM
 		// ACTION:DISPLAY
 		// DESCRIPTION:This is an event reminder
