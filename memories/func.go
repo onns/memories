@@ -198,7 +198,7 @@ func GenerateIcs(name string, days []*Anniversary) (res string) {
 		event.SetModifiedAt(time.Now())
 		if day.AllDay {
 			event.SetAllDayStartAt(day.Date)
-			event.SetAllDayEndAt(day.Date)
+			event.SetAllDayEndAt(day.Date.AddDate(0, 0, 1))
 		} else {
 			event.SetStartAt(mergeDate(day.Date, day.Start))
 			event.SetEndAt(mergeDate(day.Date, day.End))
